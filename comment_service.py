@@ -1,9 +1,10 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_cors import CORS
 
 db = SQLAlchemy()
 app = Flask(__name__)
+CORS(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://admin:dbuserdbuser@e6156cloud-computing.cvxubkmggxrp.us-east-1.rds.amazonaws.com:3306/comments_database?charset=utf8"
 db.init_app(app)
 
