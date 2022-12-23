@@ -5069,13 +5069,13 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <NotNull>1</NotNull>
       <Position>6</Position>
     </column>
-    <column id="1126" parent="365" name="postId">
+    <column id="1126" parent="365" name="pid">
       <AutoIncrement>1</AutoIncrement>
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <Position>1</Position>
     </column>
-    <column id="1127" parent="365" name="userId">
+    <column id="1127" parent="365" name="uid">
       <DataType>int|0s</DataType>
       <NotNull>1</NotNull>
       <Position>2</Position>
@@ -5100,7 +5100,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <Position>6</Position>
     </column>
     <index id="1132" parent="365" name="PRIMARY">
-      <ColNames>postId</ColNames>
+      <ColNames>pid</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>

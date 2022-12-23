@@ -42,7 +42,6 @@ def createComment():
     try:
         postId, content, userId = request.form['post_id'], request.form['content'], request.form['user_id']
         comment = Comments(postId, userId, content)
-        print(comment)
         db.session.add(comment)
         db.session.commit()
         ret = dict(success=True)
