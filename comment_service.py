@@ -1,31 +1,35 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from datetime import datetime
 
 db = SQLAlchemy()
 app = Flask(__name__)
 CORS(app)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://admin:dbuserdbuser@e6156cloud-computing.cvxubkmggxrp.us-east-1.rds.amazonaws.com:3306/comments_database?charset=utf8"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://admin:WHQ21cd1c689742@commentdb.cyww6g5eerrg.us-east-1.rds.amazonaws.com:3306/comments_database?charset=utf8"
 db.init_app(app)
 
 class Comments(db.Model):
     __tablename__ = "comments"
-    comment_id = db.Column(db.Integer, primary_key=True)
-    post_id = db.Column(db.Integer)
-    user_id = db.Column(db.Integer)
-    content = db.Column(db.Text)
+    comment_id = db.Column('comment_id', db.Integer, primary_key=True)
+    post_id = db.Column('post_id', db.Integer)
+    user_id = db.Column('user_id', db.Integer)
+    content = db.Column('content', db.Text)
+    date = db.Column('date', db.String(200))
 
     def __init__(self, postId, userId, content):
         self.user_id = userId
         self.post_id = postId
         self.content = content
+        self.date = str(datetime.now())
 
     def toJson(self):
         return {
-            'commentId': self.comment_id,
-            'postId': self.post_id,
-            'userId': self.user_id,
-            'content': self.content
+            'comment_id': self.comment_id,
+            'post_id': self.post_id,
+            'user_id': self.user_id,
+            'content': self.content,
+            'date': self.date
         }
 
 @app.route("/hello")
@@ -36,8 +40,9 @@ def helloworld():
 @app.route("/comment/create", methods=["POST"])
 def createComment():
     try:
-        postId, content, userId = request.form['postId'], request.form['content'], request.form['userId']
+        postId, content, userId = request.form['post_id'], request.form['content'], request.form['user_id']
         comment = Comments(postId, userId, content)
+        print(comment)
         db.session.add(comment)
         db.session.commit()
         ret = dict(success=True)
@@ -65,11 +70,11 @@ def deleteComment(commentId):
 def queryByPostId():
     args = request.args
     try:
-        if 'postId' in args:
-            print(args.get('postId', type=int))
-            postId = args.get('postId', type=int)
+        if 'post_id' in args:
+            print(args.get('post_id', type=int))
+            postId = args.get('post_id', type=int)
             comments = Comments.query.filter(Comments.post_id == postId).all()
-            return {'success': False, 'content': [i.toJson() for i in comments]}
+            return {'success': True, 'content': [i.toJson() for i in comments]}
     except Exception as e:
         print(e)
         return {'success': False}
@@ -77,9 +82,10 @@ def queryByPostId():
 @app.route("/comment/update", methods=["POST"])
 def updateByIdWithContent():
     try:
-        commentId, content = request.form['commentId'], request.form['content']
+        commentId, content = request.form['comment_id'], request.form['content']
         comment = Comments.query.filter(Comments.comment_id == commentId).first()
         comment.content = content
+        comment.date = str(datetime.now())
         db.session.add(comment)
         db.session.commit()
         return {'success': True}
