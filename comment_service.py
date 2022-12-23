@@ -51,15 +51,17 @@ def createComment():
         ret = dict(success=False)
         return ret
 
-@app.route("/comment/delete/<commentId>", methods=['DELETE'])
-def deleteComment(commentId):
+@app.route("/comment/delete/", methods=['DELETE'])
+def deleteComment():
+    args = request.args
     try:
-        # comment = Comments.query.get(commentId)
-        comment = Comments.query.filter(Comments.comment_id == commentId)
-        cnt = comment.delete()
-        db.session.commit()
-        ret = dict(success=True, cnt=cnt)
-        return ret
+        if 'comment_id' in args:
+            commentId = args.get('comment_id', type=int)
+            comment = Comments.query.filter(Comments.comment_id == commentId)
+            cnt = comment.delete()
+            db.session.commit()
+            ret = dict(success=True, cnt=cnt)
+            return ret
     except Exception as e:
         print(e)
         ret = dict(success=False)
