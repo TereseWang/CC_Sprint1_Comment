@@ -40,7 +40,7 @@ def helloworld():
 @app.route("/comment/create", methods=["POST"])
 def createComment():
     try:
-        postId, content, userId = request.form['post_id'], request.form['content'], request.form['user_id']
+        postId, content, userId = request.json['post_id'], request.json['content'], request.json['user_id']
         comment = Comments(postId, userId, content)
         db.session.add(comment)
         db.session.commit()
@@ -81,7 +81,7 @@ def queryByPostId():
 @app.route("/comment/update", methods=["POST"])
 def updateByIdWithContent():
     try:
-        commentId, content = request.form['comment_id'], request.form['content']
+        commentId, content = request.json['comment_id'], request.json['content']
         comment = Comments.query.filter(Comments.comment_id == commentId).first()
         comment.content = content
         comment.date = str(datetime.now())
