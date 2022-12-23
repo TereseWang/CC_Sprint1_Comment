@@ -51,7 +51,7 @@ def createComment():
         ret = dict(success=False)
         return ret
 
-@app.route("/comment/delete/", methods=['DELETE'])
+@app.route("/comment/delete", methods=['DELETE'])
 def deleteComment():
     args = request.args
     try:
